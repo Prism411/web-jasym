@@ -21,8 +21,27 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(244, 229, 229);
 }
+button {
+  background-color: #4CAF50; /* Cor de fundo verde */
+  border: none;
+  color: white; /* Cor do texto */
+  padding: 15px 32px; /* Espaçamento interno */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px; /* Tamanho do texto */
+  margin: 4px 2px;
+  cursor: pointer; /* Cursor do mouse como ponteiro */
+  border-radius: 40px; /* Borda arredondada */
+  transition-duration: 0.4s; /* Duração da transição para hover */
+}
+
+button:hover {
+  background-color: #45a049; /* Cor de fundo ao passar o mouse */
+}
+
 
 .App-link {
   color: #61dafb;

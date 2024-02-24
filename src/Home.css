@@ -1,0 +1,72 @@
+/* Reset básico para remover espaços em branco ao redor dos elementos */
+html,
+body,
+#root { 
+  margin: 0;
+  padding: 0; 
+  height: 100%; 
+  width: 100%; 
+}
+
+.home-container {
+  position: relative;
+  height: 100vh; 
+  width: 100vw; 
+  background-color: #1d1b1b; 
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+.home-header {
+  background-color: #1a1a1a; 
+  padding: 20px 0;
+  text-align: center;
+  width: 100%; 
+  height: 5%;
+}
+
+.home-title {
+  position: absolute;
+  top: 0px;
+  left: 10%;  
+  transform: translateX(-50%);
+  font-size: 2em;
+}
+
+.home-welcome {
+  position: absolute;
+  top: 50%; /* Ajuste para centralizar verticalmente na tela */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1em;
+  max-width: 80%; 
+  text-align: center;
+}
+
+.search-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 20px; 
+  background-color: #555; 
+  color: #fff;
+  border: none;
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 1em;
+}
+
+.search-button:hover {
+  background-color: #777; 
+}
+.wave-container {
+  position: absolute; /* Posicionamento absoluto dentro do home-container */
+  bottom: 0; /* Alinha na parte inferior do contêiner pai */
+  width: 100%;
+  overflow: hidden;
+}
+
+.wave-container img {
+  width: 100%;
+  display: block;
+  /* Remova 'position: bottom;' pois não é válido. */
+}
