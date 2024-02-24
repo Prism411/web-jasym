@@ -29,18 +29,18 @@ body,
 .home-title {
   position: absolute;
   top: 0px;
-  left: 10%;  
+  left: 8%;  
   transform: translateX(-50%);
   font-size: 2em;
 }
 
 .home-welcome {
   position: absolute;
-  top: 50%; /* Ajuste para centralizar verticalmente na tela */
+  top: 20%; /* Ajuste para centralizar verticalmente na tela */
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1em;
-  max-width: 80%; 
+  font-size: 2em;
+  max-width: 120%; 
   text-align: center;
 }
 
@@ -48,6 +48,7 @@ body,
   display: inline-block;
   padding: 10px 20px;
   margin-top: 20px; 
+  margin-left: 20px;
   background-color: #555; 
   color: #fff;
   border: none;
@@ -70,4 +71,23 @@ body,
 .wave-container img {
   width: 100%;
   display: block;
+}
+
+/* TextField.css */
+.search-input {
+  padding: 10px;
+  padding-left: 40px;
+  margin: 200px 0;
+  margin-left: 365px;
+  border-radius: 20px;
+  border: 0px solid #555;
+  background-color: #333;
+  color: #fff;
+  font-size: 1em;
+  width: calc(50% - 22px); /* Ajusta a largura para levar em conta o padding e a borda */
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #777;
 }
