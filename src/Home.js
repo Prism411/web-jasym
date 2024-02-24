@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importando useNavigate
 import './Home.css';
 import Wave from './gui/items/wave.svg';
-import JawynLogo from './gui/icons/jawyn.png'; // Importando a imagem
+import JawynLogo from './gui/icons/jawyn.png';
+
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,6 +12,8 @@ function Home() {
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiKey, setApiKey] = useState('');
+
+  const navigate = useNavigate(); // Instância de useNavigate
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -20,16 +24,17 @@ function Home() {
   };
 
   const handleLogin = () => {
-    // Lógica de autenticação simplificada
     console.log({ login, password });
     setIsLoggedIn(true);
   };
 
   const handleRegister = () => {
-    // Aqui você pode implementar a lógica para abrir um formulário de registro ou um modal
     console.log("Abrir formulário de registro");
   };
 
+  const handleSearch = () => {
+    navigate('/searcher'); // Navega para o componente Searcher
+  };
   return (
     <div className="home-container">
       <div className="home-header">
@@ -46,7 +51,7 @@ function Home() {
         value={searchTerm}
         onChange={handleSearchChange}
       />
-      <button className="search-button">Pesquisar</button>
+      <button className="search-button"onClick={handleSearch}>Pesquisar</button> {/* Botão de pesquisa agora com evento onClick */}
       {isMenuVisible && !isLoggedIn && (
         <div className="side-menu">
           <input
