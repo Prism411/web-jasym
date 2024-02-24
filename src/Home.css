@@ -9,9 +9,10 @@ body,
 }
 
 .home-container {
-  position: relative;
+  position: relative; 
   height: 100vh; 
   width: 100vw; 
+  overflow: hidden; /* essencial para esconder o overflow causado pelo wave */
   background-color: #1d1b1b; 
   color: #fff;
   font-family: 'Arial', sans-serif;
@@ -53,20 +54,20 @@ body,
   border-radius: 5px; 
   cursor: pointer; 
   font-size: 1em;
-}
+} 
 
 .search-button:hover {
   background-color: #777; 
 }
 .wave-container {
-  position: absolute; /* Posicionamento absoluto dentro do home-container */
-  bottom: 0; /* Alinha na parte inferior do contêiner pai */
+  position: absolute;
+  bottom: 0;
   width: 100%;
   overflow: hidden;
+  transform: translateY(25%); /* Desloca o contêiner para baixo sem criar barra de rolagem */
 }
 
 .wave-container img {
   width: 100%;
   display: block;
-  /* Remova 'position: bottom;' pois não é válido. */
 }
