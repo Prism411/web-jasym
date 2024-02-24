@@ -79,7 +79,7 @@ body,
 .search-input {
   padding: 10px;
   padding-left: 40px;
-  margin: 220px 0;
+  margin: 260px 0;
   margin-left: 300px;
   border-radius: 20px;
   border: 0px solid #555;
@@ -132,4 +132,17 @@ body,
   position: absolute; /* Exemplo de posicionamento */
   top: 5px; /* Ajuste conforme necessário */
   right: 300px; /* Posiciona o botão do menu à direita */
+}
+.logo-container {
+  position: absolute;
+  top: 27%; /* Ajuste conforme necessário para mover verticalmente */
+  left: 50%; /* Ajuste conforme necessário para mover horizontalmente */
+  transform: translate(-50%, -50%); /* Centraliza precisamente o .logo-container */
+  display: block;
+  /* Remova as margens se você está usando position para controlar o layout */
+}
+
+.logo-container img {
+  max-width: 80%;
+  max-height: 40vh; /* Ajusta conforme necessário */
 }

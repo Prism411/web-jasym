@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Home.css';
 import Wave from './gui/items/wave.svg';
+import JawynLogo from './gui/icons/jawyn.png'; // Importando a imagem
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,7 +35,9 @@ function Home() {
       <div className="home-header">
         <h1 className="home-title">JAWYN</h1>
       </div>
-      <p className="home-welcome">Bem vindo ao JAWYN searcher!</p>
+      <div className="logo-container">
+        <img src={JawynLogo} alt="JAWYN Logo" />
+      </div>
       <button className="menu-button" onClick={toggleMenu}>Menu</button> 
       <input
         type="text"
@@ -80,6 +83,6 @@ function Home() {
       </div>
     </div>
   );
-}
+} 
 
 export default Home;
