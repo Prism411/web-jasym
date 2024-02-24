@@ -50,6 +50,11 @@ function Home() {
   };
 
   const handleSearch = () => {
+      // Verifica se searchTerm é vazio ou contém apenas espaços em branco
+  if (!searchTerm.trim()) {
+    console.log('Termo de pesquisa vazio, pesquisa não realizada.');
+    return;
+  }
     fetch(`http://localhost:8080/search?query=${encodeURIComponent(searchTerm)}`, {
       method: 'GET', // Método HTTP
     })
