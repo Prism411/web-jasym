@@ -24,17 +24,46 @@ function Home() {
   };
 
   const handleLogin = () => {
-    console.log({ login, password });
-    setIsLoggedIn(true);
+    // Supondo que seu endpoint para login seja 'localhost:8080/login'
+    // e esteja esperando um JSON com login e senha
+    fetch('http://localhost:8080/login', {
+      method: 'POST', // Método HTTP
+      headers: {
+        'Content-Type': 'application/json', // Informa o tipo do conteúdo enviado
+      },
+      body: JSON.stringify({ login, password }), // Converte os dados de login e senha para string JSON
+    })
+    .then(response => response.json()) // Converte a resposta para JSON
+    .then(data => {
+      console.log('Success:', data);
+      setIsLoggedIn(true);
+      // Aqui você pode definir o apiKey ou outras ações com base na resposta
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
+  
 
   const handleRegister = () => {
     console.log("Abrir formulário de registro");
   };
 
   const handleSearch = () => {
-    navigate('/searcher'); // Navega para o componente Searcher
-  };
+    fetch(`http://localhost:8080/search?query=${encodeURIComponent(searchTerm)}`, {
+      method: 'GET', // Método HTTP
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Search Results:', data);
+      navigate('/searcher');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+};
+
+  
   return (
     <div className="home-container">
       <div className="home-header">
