@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Searcher.css';
 
 function Searcher() {
-  // State para armazenar os resultados da pesquisa
   const [searchResults, setSearchResults] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
-    // Substitua 'http://localhost:8080/search' pelo endpoint correto da sua API
-    fetch('http://localhost:8080/search?query=suaConsulta')
-      .then(response => response.json())
-      .then(data => {
-        // Assumindo que 'data' é um array de resultados semelhante ao mockResults
-        setSearchResults(data);
-      })
-      .catch(error => console.error('Erro ao buscar dados:', error));
-  }, []); // O array vazio [] como segundo argumento significa que este useEffect será executado apenas uma vez, quando o componente for montado
+    // Verifique se há algum estado passado para este componente.
+    if (location.state && location.state.searchResults) {
+      setSearchResults(location.state.searchResults);
+    }
+  }, [location]);
 
   return (
     <div className="searcher-container">

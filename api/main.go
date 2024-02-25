@@ -207,9 +207,18 @@ func search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT id, titulo AS title, descricao AS description, link AS url FROM sites")
+	queryParams := r.URL.Query()["query"]
+	if len(queryParams) == 0 {
+		http.Error(w, "A consulta de pesquisa é necessária", http.StatusBadRequest)
+		return
+	}
+
+	queryT := "%" + queryParams[0] + "%" // Adiciona os caracteres '%' ao redor do termo de busca
+
+	rows, err := db.Query("SELECT id, titulo AS title, descricao AS description, link AS url FROM sites WHERE titulo LIKE $1", queryT)
 	if err != nil {
 		http.Error(w, "Erro ao buscar sites", http.StatusInternalServerError)
+		log.Printf("Erro na consulta ao banco: %v", err)
 		return
 	}
 	defer rows.Close()
@@ -225,6 +234,12 @@ func search(w http.ResponseWriter, r *http.Request) {
 		sites = append(sites, s)
 	}
 
+	if err := rows.Err(); err != nil {
+		http.Error(w, "Erro ao processar resultados da busca", http.StatusInternalServerError)
+		log.Printf("Erro após iterar sobre os resultados: %v", err)
+		return
+	}
+	fmt.Println(sites)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(sites)
 }

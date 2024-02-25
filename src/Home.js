@@ -66,12 +66,13 @@ function Home() {
     .then(response => response.json())
     .then(data => {
       console.log('Search Results:', data);
-      navigate('/searcher');
+      navigate('/searcher', { state: { searchResults: data } });
     })
     .catch((error) => {
       console.error('Error:', error);
     });
   };
+  
   // Função para enviar a chave API
   const handleSendApiKey = () => {
     console.log('Login atual:', login); // Verifique o valor de login aqui
