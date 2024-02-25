@@ -31,6 +31,13 @@ type SearchResult struct {
 	Description string `json:"description"`
 	URL         string `json:"url"` // Adicione uma URL para cada resultado
 }
+type GoogleSearchResult struct {
+	Items []struct {
+		Title   string `json:"title"`
+		Link    string `json:"link"`
+		Snippet string `json:"snippet"`
+	} `json:"items"`
+}
 
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +57,70 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+/*func buscarNoGoogleESalvar(query string) ([]Site, error) {
+	//var googleAPIKey = "bruh"
+	var googleCSEID = "bruh"
+	url := fmt.Sprintf("https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s",
+		googleAPIKey, googleCSEID, query)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Printf("Erro ao fazer a requisição para a Google Custom Search: %v", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("Erro ao ler a resposta: %v", err)
+		return nil, err
+	}
+
+	var searchResults GoogleSearchResult
+
+	err = json.Unmarshal(body, &searchResults)
+	if err != nil {
+		log.Printf("Erro ao fazer unmarshal dos resultados da busca: %v", err)
+		return nil, err
+	}
+
+	var sites []Site
+	for _, item := range searchResults.Items {
+		site := Site{
+			Title:       item.Title,
+			Description: item.Snippet,
+			URL:         item.Link,
+		}
+		sites = append(sites, site)
+
+		// Inserção no banco de dados
+		_, err := db.Exec("INSERT INTO sites (titulo, descricao, link) VALUES ($1, $2, $3)",
+			item.Title, item.Snippet, item.Link)
+		if err != nil {
+			log.Printf("Erro ao inserir resultado no banco de dados: %v", err)
+			// Decida como lidar com erros aqui - pode optar por continuar ou retornar um erro
+		}
+	}
+
+	return sites, nil
+}*/ /*
+func search(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("query")
+	if query == "" {
+		http.Error(w, "A consulta de pesquisa é necessária", http.StatusBadRequest)
+		return
+	}
+
+	sites, err := buscarNoGoogleESalvar(query)
+	if err != nil {
+		http.Error(w, "Erro ao buscar no Google", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sites)
+}
+*/
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // Permitir apenas requisições de localhost:3000
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
