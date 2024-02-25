@@ -32,9 +32,27 @@ type SearchResult struct {
 	URL         string `json:"url"` // Adicione uma URL para cada resultado
 }
 
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Configura os cabeçalhos de CORS
+		w.Header().Set("Access-Control-Allow-Origin", "*") // Em produção, substitua '*' pelo domínio específico
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+		// Verifica se é uma requisição preflight
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK) // Responde positivamente às requisições preflight
+			return
+		}
+
+		// Procede para o próximo handler
+		next.ServeHTTP(w, r)
+	}
+}
+
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // Permitir apenas requisições de localhost:3000
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")   // Métodos permitidos
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 func initDB() {
@@ -140,12 +158,55 @@ func search(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(sites)
 }
 
+// Handler para atualizar a chave API de um usuário
+func updateApiKey(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	if r.Method != "POST" {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var requestBody struct {
+		Login  string `json:"login"`  // Supondo que o login do usuário seja enviado junto
+		ApiKey string `json:"apiKey"` // A chave API a ser atualizada
+	}
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		http.Error(w, "Erro ao decodificar o corpo da requisição", http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Recebido update da chave API para o usuário: %s", requestBody.Login)
+
+	var userExists bool
+	err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM usuarios WHERE login = $1)", requestBody.Login).Scan(&userExists)
+	if err != nil || !userExists {
+		http.Error(w, "Usuário não encontrado", http.StatusNotFound)
+		return
+	}
+	if userExists {
+		// Executa a atualização da chave API para o usuário especificado
+		_, err = db.Exec("UPDATE usuarios SET api_key = $2 WHERE login = $1", requestBody.Login, requestBody.ApiKey)
+		if err != nil {
+			// Se ocorrer um erro durante a atualização, retorna um erro 500
+			log.Printf("Erro ao atualizar a chave API: %v", err)
+			http.Error(w, "Erro interno ao atualizar a chave API", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Chave API atualizada com sucesso"})
+}
+
 func main() {
 	initDB()
 	log.Println("Inicializando servidor...")
 
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/search", search)
+	http.HandleFunc("/login", corsMiddleware(login))
+	http.HandleFunc("/search", corsMiddleware(search))
+	http.HandleFunc("/update-api-key", corsMiddleware(updateApiKey))
 
 	log.Println("Server is running on http://localhost:8080")
 	err := http.ListenAndServe(":8080", nil)
