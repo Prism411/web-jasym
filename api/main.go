@@ -285,6 +285,21 @@ func updateApiKey(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"message": "Chave API atualizada com sucesso"})
 }
+func lda() {
+	documents, err := loadAllSites()
+	if err != nil {
+		fmt.Printf("Erro ao carregar sites: %v\n", err)
+		return
+	}
+	topics, err := performLDAPython(documents)
+	if err != nil {
+		fmt.Println("Erro ao realizar análise LDA:", err)
+		return
+	}
+	for _, topic := range topics {
+		fmt.Printf("Tópico: %d, Palavras-chave: %s\n", topic.Index, topic.Description)
+	}
+}
 
 func main() {
 	initDB()
@@ -293,10 +308,11 @@ func main() {
 	http.HandleFunc("/login", corsMiddleware(login))
 	http.HandleFunc("/search", corsMiddleware(search))
 	http.HandleFunc("/update-api-key", corsMiddleware(updateApiKey))
-
+	lda()
 	log.Println("Server is running on http://localhost:8080")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatalf("Erro ao iniciar o servidor: %v", err)
 	}
+
 }
